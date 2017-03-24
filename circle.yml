@@ -1,0 +1,23 @@
+machine:
+  environment:
+    PATH: $HOME/.cache/bin:$PATH
+
+dependencies:
+  override:
+    - scripts/ci/install-dcos-cli
+    - scripts/ci/install-dcos-login-cli
+
+  cache_directories:
+    - "~/.cache"
+
+test:
+  override:
+    - echo "No tests here :)"
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - scripts/ci/login
+      - scripts/ci/marathon-deploy services/hello-world
+      - VERBOSE=1 scripts/ci/metronome-deploy jobs/hello-world

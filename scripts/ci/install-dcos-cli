@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ ! -z ${VERBOSE+x} ]]; then
+  set -x
+fi
+
+BINS="$HOME/.cache/bin"
+
+DCOS_CLI="$BINS/dcos"
+DCOS_CLI_VERSION="0.4.16"
+
+mkdir -p "$BINS"
+curl -sSL "https://downloads.dcos.io/binaries/cli/linux/x86-64/$DCOS_CLI_VERSION/dcos" -o "$DCOS_CLI"
+chmod u+x "$DCOS_CLI"

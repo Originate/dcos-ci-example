@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ ! -z ${VERBOSE+x} ]]; then
+  set -x
+fi
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+
+JOB="$1"
+JOB_MANIFEST="$JOB/job.json"
+JOB_SCHEDULE="$JOB/schedule.json"
+JOB_ID="$(jq -r '.id' "$JOB_MANIFEST")"
+
+function job_exists() {
+  local job_id="$1"
+
+  dcos job list --json | jq  -r '.[].id' | grep -Eq "^$job_id$"
+}
+
+if job_exists "$JOB_ID"; then
+  dcos job update "$JOB_MANIFEST"
+  # Running `dcos job update` with an embdedded schedules doesn't work
+  dcos job schedule update "$JOB_ID" "$JOB_SCHEDULE"
+else
+  dcos job add "$JOB_MANIFEST"
+  dcos job schedule add "$JOB_ID" "$JOB_SCHEDULE"
+fi
