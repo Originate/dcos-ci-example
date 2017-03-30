@@ -12,7 +12,7 @@ DCOS_CLI="$BINS/dcos"
 DCOS_CLI_VERSION="0.4.16"
 
 installed_version() {
-  dcos --version | grep 'dcos.version' | cut -d= -f2
+  dcos --version | grep 'dcoscli.version' | cut -d= -f2
 }
 
 install_dcos_cli() {
@@ -26,7 +26,7 @@ if [ ! -e "$DCOS_CLI" ]; then
   echo "DC/OS CLI not found. Installing"
   install_dcos_cli
 else
-  INSTALLED_VERSION=$(installed_version)
+  INSTALLED_VERSION="$(installed_version)"
   if [ "$DCOS_CLI_VERSION" != "$INSTALLED_VERSION" ]; then
     echo "DC/OS CLI has version $INSTALLED_VERSION, want $DCOS_CLI_VERSION. Upgrading"
     rm -rf "$DCOS_CLI"
