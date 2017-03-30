@@ -13,11 +13,11 @@ for NAME in GH_USERNAME GH_PASSWORD; do
   fi
 done
 
-CLUSTER_URL="$1"
-
 if [[ ! -z ${VERBOSE+x} ]]; then
   set -x
 fi
+
+CLUSTER_URL="$1"
 
 # Setup the DC/OS CLI
 dcos config set core.dcos_url "$CLUSTER_URL"
