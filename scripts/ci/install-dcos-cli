@@ -11,6 +11,27 @@ BINS="$HOME/.cache/bin"
 DCOS_CLI="$BINS/dcos"
 DCOS_CLI_VERSION="0.4.16"
 
-mkdir -p "$BINS"
-curl -sSL "https://downloads.dcos.io/binaries/cli/linux/x86-64/$DCOS_CLI_VERSION/dcos" -o "$DCOS_CLI"
-chmod u+x "$DCOS_CLI"
+installed_version() {
+  dcos --version | grep 'dcos.version' | cut -d= -f2
+}
+
+install_dcos_cli() {
+  mkdir -p "$BINS"
+  curl -sSL "https://downloads.dcos.io/binaries/cli/linux/x86-64/$DCOS_CLI_VERSION/dcos" \
+    -o "$DCOS_CLI"
+  chmod u+x "$DCOS_CLI"
+}
+
+if [ ! -e "$DCOS_CLI" ]; then
+  echo "DC/OS CLI not found. Installing"
+  install_dcos_cli
+else
+  INSTALLED_VERSION=$(installed_version)
+  if [ "$DCOS_CLI_VERSION" != "$INSTALLED_VERSION" ]; then
+    echo "DC/OS CLI has version $INSTALLED_VERSION, want $DCOS_CLI_VERSION. Upgrading"
+    rm -rf "$DCOS_CLI"
+    install_dcos_cli
+  else
+    echo "Using cached DC/OS CLI $INSTALLED_VERSION"
+  fi
+fi

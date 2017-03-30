@@ -5,19 +5,19 @@ machine:
 dependencies:
   override:
     - scripts/ci/install-dcos-cli
-    - scripts/ci/install-dcos-login-cli
+    - scripts/ci/install-dcos-login
 
   cache_directories:
     - "~/.cache"
 
 test:
   override:
-    - echo "No tests here :)"
+    - echo "You'd normally run your tests here"
 
 deployment:
   master:
     branch: master
     commands:
-      - scripts/ci/login
+      - scripts/ci/login "$CLUSTER_URL"
       - scripts/ci/marathon-deploy services/hello-world
-      - VERBOSE=1 scripts/ci/metronome-deploy jobs/hello-world
+      - scripts/ci/metronome-deploy jobs/hello-world
