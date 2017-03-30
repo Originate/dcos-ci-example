@@ -6,14 +6,12 @@ if [[ ! -z ${VERBOSE+x} ]]; then
   set -x
 fi
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-
 JOB="$1"
 JOB_MANIFEST="$JOB/job.json"
 JOB_SCHEDULE="$JOB/schedule.json"
 JOB_ID="$(jq -r '.id' "$JOB_MANIFEST")"
 
+# This returns true if the job currently exists in Metronome (e.g. needs to be updated instead of created)
 function job_exists() {
   local job_id="$1"
 

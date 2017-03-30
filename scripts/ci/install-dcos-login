@@ -12,14 +12,17 @@ DCOS_LOGIN="$BINS/dcos-login"
 
 CURL="curl -sSL -u bowbaq:$GITHUB_TOKEN"
 
+# Returns the version of the currently installed dcos-login binary. e.g v0.24
 installed_version() {
   dcos-login --version 2>&1
 }
 
+# Returns the version of the latest release of the dcos-login binary. e.g v0.24
 latest_version() {
   $CURL https://api.github.com/repos/Originate/dcos-login/releases/latest | jq -r '.name'
 }
 
+# Downloads the latest version of the dcos-login binary for linux to the cache
 install_dcos_login() {
   mkdir -p "$BINS"
 
@@ -30,6 +33,7 @@ install_dcos_login() {
   chmod u+x "$DCOS_LOGIN"
 }
 
+# Install dcos-login if it's missing. If it's present, upgrade it if needed otherwise do nothing
 if [ ! -e "$DCOS_LOGIN" ]; then
   echo "dcos-login not found. Installing"
   install_dcos_login

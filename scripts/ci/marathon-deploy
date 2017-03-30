@@ -6,12 +6,12 @@ if [[ ! -z ${VERBOSE+x} ]]; then
   set -x
 fi
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
 SERVICE="$1"
 SERVICE_MANIFEST="$SERVICE/marathon.json"
+# Marathon automatically prefixes service names with a /. We use the slash-less version in the manifest.
 SERVICE_ID="/$(jq -r '.id' "$SERVICE_MANIFEST")"
 
+# This returns true if the service currently exists in Marathon (e.g. needs to be updated instead of created)
 service_exists() {
   local service_id="$1"
 

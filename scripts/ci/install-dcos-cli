@@ -11,10 +11,12 @@ BINS="$HOME/.cache/bin"
 DCOS_CLI="$BINS/dcos"
 DCOS_CLI_VERSION="0.4.16"
 
+# Returns the version of the currently installed DC/OS CLI binary. e.g 0.4.16
 installed_version() {
   dcos --version | grep 'dcoscli.version' | cut -d= -f2
 }
 
+# Downloads the DC/OS CLI binary for linux with version $DCOS_CLI_VERSION to the cache
 install_dcos_cli() {
   mkdir -p "$BINS"
   curl -sSL "https://downloads.dcos.io/binaries/cli/linux/x86-64/$DCOS_CLI_VERSION/dcos" \
@@ -22,6 +24,7 @@ install_dcos_cli() {
   chmod u+x "$DCOS_CLI"
 }
 
+# Install the DC/OS CLI if it's missing. If it's present, upgrade it if needed otherwise do nothing
 if [ ! -e "$DCOS_CLI" ]; then
   echo "DC/OS CLI not found. Installing"
   install_dcos_cli
